@@ -9,9 +9,11 @@ import { FileText, Clock, CheckCircle, AlertCircle, Plus } from 'lucide-react'
 import type { RFQ } from '@/lib/types'
 import { RFQ_STATUS_LABELS, RFQ_STATUS_COLORS, RFQ_PRIORITY_LABELS } from '@/lib/types'
 
+// Module-level client - created once, not on every render
+const supabase = createClient()
+
 export default function UserDashboard() {
   const { user } = useAuth()
-  const supabase = createClient()
   const [rfqs, setRfqs] = useState<RFQ[]>([])
   const [loading, setLoading] = useState(true)
 

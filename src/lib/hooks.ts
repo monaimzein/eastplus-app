@@ -5,84 +5,65 @@ import { createClient } from '@/lib/supabase/client'
 import { useAuthStore } from '@/lib/store'
 import type { Profile } from '@/lib/types'
 
-// Single shared client instance
+// Single shared client instance - module level to avoid re-creation on renders
 const supabase = createClient()
 
+// Prevent multiple auth listeners across component mounts (e.g. DashboardLayout + page both using useAuth)
+let listenerAttached = false
+
+async function fetchProfile(userId: string): Promise<Profile | null> {
+  const { data } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single()
+  return data as Profile | null
+}
+
 export function useAuth() {
-  const { user, isLoading, setUser, setLoading } = useAuthStore()
+  const { user, isLoading } = useAuthStore()
 
   useEffect(() => {
-    let cancelled = false
+    // If already initialized (multiple components using useAuth), skip
+    if (listenerAttached) return
+    listenerAttached = true
 
-    const fetchProfile = async (userId: string): Promise<Profile | null> => {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single()
-      return data as Profile | null
-    }
+    // Use onAuthStateChange as single source of truth.
+    // INITIAL_SESSION fires immediately with the current session from cache -
+    // no extra network call needed, and no race condition with a separate getUser().
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      // Access store setters fresh - they are stable Zustand functions
+      const { setUser, setLoading } = useAuthStore.getState()
 
-    const initAuth = async () => {
-      try {
-        // getUser() validates the JWT server-side and auto-refreshes expired tokens
-        // Unlike getSession() which only reads cached/cookie data without validation
-        const { data: { user: authUser }, error } = await supabase.auth.getUser()
-
-        if (cancelled) return
-
-        if (error || !authUser) {
-          // If there's an auth error (expired refresh token, invalid session),
-          // clear the broken session so user can log in fresh without clearing cookies
-          if (error) {
-            await supabase.auth.signOut({ scope: 'local' })
-          }
+      if (event === 'INITIAL_SESSION') {
+        if (session?.user) {
+          const profile = await fetchProfile(session.user.id)
+          // Re-get setters after await (getState() is always current)
+          useAuthStore.getState().setUser(profile)
+        } else {
           setUser(null)
-          setLoading(false)
-          return
         }
+        useAuthStore.getState().setLoading(false)
+        return
+      }
 
-        const profile = await fetchProfile(authUser.id)
-        if (!cancelled) {
-          setUser(profile)
-          setLoading(false)
-        }
-      } catch {
-        if (!cancelled) {
-          setUser(null)
-          setLoading(false)
+      if (event === 'SIGNED_OUT') {
+        setUser(null)
+        setLoading(false)
+        return
+      }
+
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        if (session?.user) {
+          const profile = await fetchProfile(session.user.id)
+          useAuthStore.getState().setUser(profile)
+          useAuthStore.getState().setLoading(false)
         }
       }
-    }
+    })
 
-    initAuth()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (cancelled) return
-
-        if (event === 'SIGNED_OUT') {
-          setUser(null)
-          setLoading(false)
-          return
-        }
-
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          if (session?.user) {
-            const profile = await fetchProfile(session.user.id)
-            if (!cancelled) {
-              setUser(profile)
-              setLoading(false)
-            }
-          }
-        }
-      }
-    )
-
-    return () => {
-      cancelled = true
-      subscription.unsubscribe()
-    }
+    // Intentionally no cleanup: we keep the single global listener alive.
+    // It will be garbage-collected when the browser tab closes.
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return { user, isLoading }

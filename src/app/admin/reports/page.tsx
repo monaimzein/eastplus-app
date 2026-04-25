@@ -83,14 +83,14 @@ export default function AdminReportsPage() {
 
   return (
     <DashboardLayout role="admin">
-      <div className="space-y-8">
+      <div className="space-y-6 sm:space-y-8">
         <div>
-          <h1 className="text-2xl font-bold text-[#1A1A1A]">التقارير والإحصائيات</h1>
-          <p className="text-gray-500 mt-1">نظرة شاملة على أداء المنصة</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-[#1A1A1A]">التقارير والإحصائيات</h1>
+          <p className="text-gray-500 mt-1 text-sm sm:text-base">نظرة شاملة على أداء المنصة</p>
         </div>
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {[
             { label: 'إجمالي الطلبات', value: totalRfqs, icon: FileText, color: 'bg-blue-50 text-blue-600' },
             { label: 'تم التسعير', value: quotedRfqs, icon: FileText, color: 'bg-green-50 text-green-600' },
@@ -98,43 +98,69 @@ export default function AdminReportsPage() {
             { label: 'متوسط وقت الرد', value: `${avgResponseHours}h`, icon: Clock, color: 'bg-yellow-50 text-yellow-600' },
             { label: 'متوسط التقييم', value: avgRating, icon: Star, color: 'bg-orange-50 text-orange-600' },
           ].map((stat) => (
-            <div key={stat.label} className="bg-white rounded-2xl border border-gray-100 p-5">
-              <div className={`w-10 h-10 rounded-xl ${stat.color} flex items-center justify-center mb-3`}>
-                <stat.icon size={20} />
+            <div key={stat.label} className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5">
+              <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${stat.color} flex items-center justify-center mb-2 sm:mb-3`}>
+                <stat.icon size={18} />
               </div>
-              <p className="text-2xl font-bold text-[#1A1A1A]">{stat.value}</p>
+              <p className="text-xl sm:text-2xl font-bold text-[#1A1A1A] break-words">{stat.value}</p>
               <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
             </div>
           ))}
         </div>
 
         {/* Staff Performance */}
-        <div className="bg-white rounded-2xl border border-gray-100">
-          <div className="px-6 py-4 border-b border-gray-100">
-            <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center gap-2">
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div className="px-4 sm:px-6 py-4 border-b border-gray-100">
+            <h2 className="text-base sm:text-lg font-bold text-[#1A1A1A] flex items-center gap-2">
               <Users size={20} />
               أداء الموظفين
             </h2>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
+
+          {/* Mobile cards */}
+          <div className="sm:hidden divide-y divide-gray-50">
+            {staffPerformance.length === 0 ? (
+              <p className="text-center text-gray-400 py-8">لا يوجد موظفون</p>
+            ) : (
+              staffPerformance.map((s) => (
+                <div key={s.id} className="p-4">
+                  <p className="font-medium text-[#1A1A1A] mb-2 break-words">{s.company_name}</p>
+                  <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+                    <span>المعينة: <span className="text-gray-700 font-medium">{s.total}</span></span>
+                    <span>المنجزة: <span className="text-gray-700 font-medium">{s.completed}</span></span>
+                    <span className="text-gray-700 font-medium">{s.rate}%</span>
+                  </div>
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full gold-gradient rounded-full"
+                      style={{ width: `${s.rate}%` }}
+                    />
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Desktop table */}
+          <div className="hidden sm:block overflow-x-auto">
+            <table className="w-full min-w-[480px]">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">الموظف</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">الطلبات المعينة</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">المنجزة</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">نسبة الإنجاز</th>
+                  <th className="text-right px-4 sm:px-6 py-3 text-xs font-medium text-gray-500">الموظف</th>
+                  <th className="text-right px-4 sm:px-6 py-3 text-xs font-medium text-gray-500">المعينة</th>
+                  <th className="text-right px-4 sm:px-6 py-3 text-xs font-medium text-gray-500">المنجزة</th>
+                  <th className="text-right px-4 sm:px-6 py-3 text-xs font-medium text-gray-500">نسبة الإنجاز</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {staffPerformance.map((s) => (
                   <tr key={s.id}>
-                    <td className="px-6 py-4 font-medium text-[#1A1A1A]">{s.company_name}</td>
-                    <td className="px-6 py-4 text-gray-600">{s.total}</td>
-                    <td className="px-6 py-4 text-gray-600">{s.completed}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4 font-medium text-[#1A1A1A]">{s.company_name}</td>
+                    <td className="px-4 sm:px-6 py-4 text-gray-600">{s.total}</td>
+                    <td className="px-4 sm:px-6 py-4 text-gray-600">{s.completed}</td>
+                    <td className="px-4 sm:px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="w-16 sm:w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
                           <div
                             className="h-full gold-gradient rounded-full"
                             style={{ width: `${s.rate}%` }}
@@ -152,28 +178,34 @@ export default function AdminReportsPage() {
 
         {/* Monthly Breakdown */}
         <div className="bg-white rounded-2xl border border-gray-100">
-          <div className="px-6 py-4 border-b border-gray-100">
-            <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center gap-2">
+          <div className="px-4 sm:px-6 py-4 border-b border-gray-100">
+            <h2 className="text-base sm:text-lg font-bold text-[#1A1A1A] flex items-center gap-2">
               <BarChart3 size={20} />
               الطلبات الشهرية
             </h2>
           </div>
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {Object.keys(monthlyData).length === 0 ? (
               <p className="text-center text-gray-400 py-8">لا توجد بيانات بعد</p>
             ) : (
               <div className="space-y-3">
                 {Object.entries(monthlyData).map(([month, count]) => (
-                  <div key={month} className="flex items-center gap-4">
-                    <span className="text-sm text-gray-600 w-32 shrink-0">{month}</span>
-                    <div className="flex-1 h-8 bg-gray-50 rounded-lg overflow-hidden">
-                      <div
-                        className="h-full gold-gradient rounded-lg flex items-center justify-end px-3"
-                        style={{
-                          width: `${Math.max((count / Math.max(...Object.values(monthlyData))) * 100, 10)}%`,
-                        }}
-                      >
-                        <span className="text-xs font-bold text-white">{count}</span>
+                  <div key={month}>
+                    <div className="flex items-center justify-between mb-1 sm:hidden">
+                      <span className="text-xs text-gray-600 truncate">{month}</span>
+                      <span className="text-xs font-bold text-[#1A1A1A]">{count}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="hidden sm:block text-sm text-gray-600 w-32 shrink-0 truncate">{month}</span>
+                      <div className="flex-1 h-7 sm:h-8 bg-gray-50 rounded-lg overflow-hidden">
+                        <div
+                          className="h-full gold-gradient rounded-lg flex items-center justify-end px-3"
+                          style={{
+                            width: `${Math.max((count / Math.max(...Object.values(monthlyData))) * 100, 10)}%`,
+                          }}
+                        >
+                          <span className="hidden sm:inline text-xs font-bold text-white">{count}</span>
+                        </div>
                       </div>
                     </div>
                   </div>

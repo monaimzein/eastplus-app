@@ -25,6 +25,9 @@ import {
 } from 'lucide-react'
 import type { Notification } from '@/lib/types'
 
+// Module-level client - created once, not on every render
+const supabase = createClient()
+
 interface DashboardLayoutProps {
   children: React.ReactNode
   role?: 'user' | 'staff' | 'admin'
@@ -38,7 +41,6 @@ export default function DashboardLayout({
   const { unreadCount, setNotifications } = useNotificationStore()
   const pathname = usePathname()
   const router = useRouter()
-  const supabase = createClient()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
 

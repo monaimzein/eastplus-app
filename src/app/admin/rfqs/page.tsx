@@ -94,7 +94,7 @@ export default function AdminRFQsPage() {
   return (
     <DashboardLayout role="admin">
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-[#1A1A1A]">إدارة جميع الطلبات</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-[#1A1A1A]">إدارة جميع الطلبات</h1>
 
         {/* Search */}
         <div className="relative">
@@ -109,7 +109,7 @@ export default function AdminRFQsPage() {
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
           <Filter size={16} className="text-gray-400 shrink-0" />
           {statuses.map((status) => (
             <button
@@ -126,79 +126,129 @@ export default function AdminRFQsPage() {
           ))}
         </div>
 
-        {/* Table */}
+        {/* List */}
         <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
           {loading ? (
             <div className="p-8 text-center">
               <div className="w-8 h-8 border-2 border-[#DCBE81] border-t-transparent rounded-full animate-spin mx-auto" />
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">الطلب</th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">العميل</th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">الحالة</th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">المعين إليه</th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">تعيين</th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">التاريخ</th>
-                    <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">حذف</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {filteredRfqs.map((rfq) => (
-                    <tr key={rfq.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <Link
-                          href={`/staff/rfqs/${rfq.id}`}
-                          className="font-medium text-[#1A1A1A] hover:text-[#DCBE81]"
-                        >
-                          {rfq.title}
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {(rfq.user as any)?.company_name}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`status-badge ${RFQ_STATUS_COLORS[rfq.status]}`}>
-                          {RFQ_STATUS_LABELS[rfq.status]}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {(rfq.staff as any)?.company_name || '—'}
-                      </td>
-                      <td className="px-6 py-4">
-                        <select
-                          value={rfq.assigned_to || ''}
-                          onChange={(e) => assignToStaff(rfq.id, e.target.value)}
-                          className="text-xs border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-[#DCBE81]"
-                        >
-                          <option value="">اختر موظف</option>
-                          {staff.map((s) => (
-                            <option key={s.id} value={s.id}>
-                              {s.company_name}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-400">
-                        {new Date(rfq.created_at).toLocaleDateString('ar-SA')}
-                      </td>
-                      <td className="px-6 py-4">
-                        <button
-                          onClick={() => deleteRfq(rfq.id, rfq.title)}
-                          className="text-red-400 hover:text-red-600 transition-colors p-1 rounded-lg hover:bg-red-50"
-                          title="حذف الطلب"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </td>
+            <>
+              {/* Mobile cards */}
+              <div className="lg:hidden divide-y divide-gray-50">
+                {filteredRfqs.map((rfq) => (
+                  <div key={rfq.id} className="p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <Link
+                        href={`/staff/rfqs/${rfq.id}`}
+                        className="font-medium text-[#1A1A1A] hover:text-[#DCBE81] flex-1 min-w-0 break-words"
+                      >
+                        {rfq.title}
+                      </Link>
+                      <span className={`status-badge shrink-0 ${RFQ_STATUS_COLORS[rfq.status]}`}>
+                        {RFQ_STATUS_LABELS[rfq.status]}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-1 truncate">
+                      {(rfq.user as any)?.company_name}
+                    </p>
+                    <p className="text-xs text-gray-400 mb-3">
+                      المعين: {(rfq.staff as any)?.company_name || '—'} •{' '}
+                      {new Date(rfq.created_at).toLocaleDateString('ar-SA')}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <select
+                        value={rfq.assigned_to || ''}
+                        onChange={(e) => assignToStaff(rfq.id, e.target.value)}
+                        className="flex-1 min-w-0 text-xs border border-gray-200 rounded-lg px-2 py-2 focus:outline-none focus:border-[#DCBE81]"
+                      >
+                        <option value="">اختر موظف</option>
+                        {staff.map((s) => (
+                          <option key={s.id} value={s.id}>
+                            {s.company_name}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        onClick={() => deleteRfq(rfq.id, rfq.title)}
+                        className="text-red-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50 shrink-0"
+                        title="حذف الطلب"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop table */}
+              <div className="hidden lg:block overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">الطلب</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">العميل</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">الحالة</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">المعين إليه</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">تعيين</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">التاريخ</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-gray-500">حذف</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {filteredRfqs.map((rfq) => (
+                      <tr key={rfq.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4">
+                          <Link
+                            href={`/staff/rfqs/${rfq.id}`}
+                            className="font-medium text-[#1A1A1A] hover:text-[#DCBE81]"
+                          >
+                            {rfq.title}
+                          </Link>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">
+                          {(rfq.user as any)?.company_name}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`status-badge ${RFQ_STATUS_COLORS[rfq.status]}`}>
+                            {RFQ_STATUS_LABELS[rfq.status]}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">
+                          {(rfq.staff as any)?.company_name || '—'}
+                        </td>
+                        <td className="px-6 py-4">
+                          <select
+                            value={rfq.assigned_to || ''}
+                            onChange={(e) => assignToStaff(rfq.id, e.target.value)}
+                            className="text-xs border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-[#DCBE81]"
+                          >
+                            <option value="">اختر موظف</option>
+                            {staff.map((s) => (
+                              <option key={s.id} value={s.id}>
+                                {s.company_name}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-400">
+                          {new Date(rfq.created_at).toLocaleDateString('ar-SA')}
+                        </td>
+                        <td className="px-6 py-4">
+                          <button
+                            onClick={() => deleteRfq(rfq.id, rfq.title)}
+                            className="text-red-400 hover:text-red-600 transition-colors p-1 rounded-lg hover:bg-red-50"
+                            title="حذف الطلب"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </div>
       </div>

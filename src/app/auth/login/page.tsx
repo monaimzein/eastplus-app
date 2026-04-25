@@ -20,35 +20,29 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
 
     if (error) {
       toast.error('خطأ في البريد الإلكتروني أو كلمة المرور')
-    } else {
-      // Get user profile to check role
-      const { data: { user: authUser } } = await supabase.auth.getUser()
-      if (authUser) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', authUser.id)
-          .single()
-
-        toast.success('تم تسجيل الدخول بنجاح')
-        const role = profile?.role
-        if (role === 'admin') window.location.href = '/admin'
-        else if (role === 'staff') window.location.href = '/staff'
-        else window.location.href = '/dashboard'
-      } else {
-        toast.success('تم تسجيل الدخول بنجاح')
-        window.location.href = '/dashboard'
-      }
+      setLoading(false)
+      return
     }
 
-    setLoading(false)
+    // Use user from signIn response directly - no extra getUser() call needed
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', data.user.id)
+      .single()
+
+    toast.success('تم تسجيل الدخول بنجاح')
+    const role = profile?.role
+    if (role === 'admin') router.push('/admin')
+    else if (role === 'staff') router.push('/staff')
+    else router.push('/dashboard')
   }
 
   return (

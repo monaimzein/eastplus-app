@@ -51,12 +51,12 @@ export default function UserRFQsPage() {
   return (
     <DashboardLayout role="user">
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-[#1A1A1A]">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#1A1A1A]">
           طلبات عروض الأسعار
         </h1>
 
         {/* Filters */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
           <Filter size={16} className="text-gray-400 shrink-0" />
           {statuses.map((status) => (
             <button
@@ -74,7 +74,7 @@ export default function UserRFQsPage() {
         </div>
 
         {/* RFQ List */}
-        <div className="bg-white rounded-2xl border border-gray-100">
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
           {loading ? (
             <div className="p-8 text-center">
               <div className="w-8 h-8 border-2 border-[#DCBE81] border-t-transparent rounded-full animate-spin mx-auto" />
@@ -90,25 +90,25 @@ export default function UserRFQsPage() {
                 <Link
                   key={rfq.id}
                   href={`/dashboard/rfqs/${rfq.id}`}
-                  className="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 transition-colors"
+                  className="flex items-start gap-3 px-4 sm:px-6 py-4 hover:bg-gray-50 transition-colors"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-[#DCBE81]/10 flex items-center justify-center shrink-0">
-                    <FileText size={18} className="text-[#DCBE81]" />
+                  <div className="w-9 h-9 rounded-xl bg-[#DCBE81]/10 flex items-center justify-center shrink-0 mt-0.5">
+                    <FileText size={16} className="text-[#DCBE81]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-[#1A1A1A] truncate">
-                      {rfq.title}
-                    </p>
+                    <div className="flex items-start justify-between gap-2 flex-wrap sm:flex-nowrap">
+                      <p className="font-medium text-[#1A1A1A] flex-1 min-w-0 break-words sm:truncate">
+                        {rfq.title}
+                      </p>
+                      <span className={`status-badge shrink-0 whitespace-nowrap ${RFQ_STATUS_COLORS[rfq.status]}`}>
+                        {RFQ_STATUS_LABELS[rfq.status]}
+                      </span>
+                    </div>
                     <p className="text-xs text-gray-400 mt-1">
                       {RFQ_PRIORITY_LABELS[rfq.priority]} •{' '}
                       {new Date(rfq.created_at).toLocaleDateString('ar-SA')}
                     </p>
                   </div>
-                  <span
-                    className={`status-badge ${RFQ_STATUS_COLORS[rfq.status]}`}
-                  >
-                    {RFQ_STATUS_LABELS[rfq.status]}
-                  </span>
                 </Link>
               ))}
             </div>
