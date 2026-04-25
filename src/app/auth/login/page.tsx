@@ -40,9 +40,9 @@ export default function LoginPage() {
 
     toast.success('تم تسجيل الدخول بنجاح')
     const role = profile?.role
-    if (role === 'admin') router.push('/admin')
-    else if (role === 'staff') router.push('/staff')
-    else router.push('/dashboard')
+    if (role === 'admin') window.location.href = '/admin'
+    else if (role === 'staff') window.location.href = '/staff'
+    else window.location.href = '/dashboard'
   }
 
   return (
