@@ -126,6 +126,11 @@ export default function DashboardLayout({
     )
   }
 
+  if (!user) {
+    router.replace('/auth/login')
+    return null
+  }
+
   const navItems = getNavItems()
 
   return (

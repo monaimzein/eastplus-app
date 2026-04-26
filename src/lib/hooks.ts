@@ -36,14 +36,18 @@ export function useAuth() {
       const { setUser, setLoading } = useAuthStore.getState()
 
       if (event === 'INITIAL_SESSION') {
-        if (session?.user) {
-          const profile = await fetchProfile(session.user.id)
-          // Re-get setters after await (getState() is always current)
-          useAuthStore.getState().setUser(profile)
-        } else {
+        try {
+          if (session?.user) {
+            const profile = await fetchProfile(session.user.id)
+            useAuthStore.getState().setUser(profile)
+          } else {
+            setUser(null)
+          }
+        } catch {
           setUser(null)
+        } finally {
+          useAuthStore.getState().setLoading(false)
         }
-        useAuthStore.getState().setLoading(false)
         return
       }
 
@@ -54,9 +58,14 @@ export function useAuth() {
       }
 
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        if (session?.user) {
-          const profile = await fetchProfile(session.user.id)
-          useAuthStore.getState().setUser(profile)
+        try {
+          if (session?.user) {
+            const profile = await fetchProfile(session.user.id)
+            useAuthStore.getState().setUser(profile)
+          }
+        } catch {
+          // keep existing user state
+        } finally {
           useAuthStore.getState().setLoading(false)
         }
       }
