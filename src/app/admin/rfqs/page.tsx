@@ -109,7 +109,7 @@ export default function AdminRFQsPage() {
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2">
           <Filter size={16} className="text-gray-400 shrink-0" />
           {statuses.map((status) => (
             <button

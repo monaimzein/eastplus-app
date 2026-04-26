@@ -248,7 +248,7 @@ export default function DashboardLayout({
       )}
 
       {/* Main Content */}
-      <div className="flex-1 lg:mr-64">
+      <div className="flex-1 min-w-0 lg:mr-64">
         {/* Top bar */}
         <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-gray-100">
           <div className="flex items-center justify-between px-4 lg:px-8 py-3">

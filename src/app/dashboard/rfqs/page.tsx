@@ -56,7 +56,7 @@ export default function UserRFQsPage() {
         </h1>
 
         {/* Filters */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2">
           <Filter size={16} className="text-gray-400 shrink-0" />
           {statuses.map((status) => (
             <button
@@ -96,8 +96,8 @@ export default function UserRFQsPage() {
                     <FileText size={16} className="text-[#DCBE81]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2 flex-wrap sm:flex-nowrap">
-                      <p className="font-medium text-[#1A1A1A] flex-1 min-w-0 break-words sm:truncate">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="font-medium text-[#1A1A1A] flex-1 min-w-0 truncate">
                         {rfq.title}
                       </p>
                       <span className={`status-badge shrink-0 whitespace-nowrap ${RFQ_STATUS_COLORS[rfq.status]}`}>
