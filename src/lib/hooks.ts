@@ -28,28 +28,33 @@ export function useAuth() {
     if (listenerAttached) return
     listenerAttached = true
 
-    // Use onAuthStateChange as single source of truth.
-    // INITIAL_SESSION fires immediately with the current session from cache -
-    // no extra network call needed, and no race condition with a separate getUser().
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      // Access store setters fresh - they are stable Zustand functions
-      const { setUser, setLoading } = useAuthStore.getState()
-
-      if (event === 'INITIAL_SESSION') {
-        try {
-          if (session?.user) {
-            const profile = await fetchProfile(session.user.id)
-            useAuthStore.getState().setUser(profile)
-          } else {
-            setUser(null)
-          }
-        } catch {
-          setUser(null)
-        } finally {
-          useAuthStore.getState().setLoading(false)
+    // getSession() reads directly from cookie/localStorage storage - reliable in production.
+    // INITIAL_SESSION event is NOT used because @supabase/ssr can silently skip it in
+    // server-rendered environments (Netlify / Vercel), causing infinite loading.
+    const initSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session?.user) {
+          const profile = await fetchProfile(session.user.id)
+          useAuthStore.getState().setUser(profile)
+        } else {
+          useAuthStore.getState().setUser(null)
         }
-        return
+      } catch {
+        useAuthStore.getState().setUser(null)
+      } finally {
+        useAuthStore.getState().setLoading(false)
       }
+    }
+
+    initSession()
+
+    // Listen for subsequent auth changes (login/logout/token refresh).
+    // Skip INITIAL_SESSION — already handled by initSession() above.
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'INITIAL_SESSION') return
+
+      const { setUser, setLoading } = useAuthStore.getState()
 
       if (event === 'SIGNED_OUT') {
         setUser(null)
