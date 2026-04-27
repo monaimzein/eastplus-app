@@ -13,12 +13,17 @@ import { RFQ_STATUS_LABELS, RFQ_STATUS_COLORS, RFQ_PRIORITY_LABELS } from '@/lib
 const supabase = createClient()
 
 export default function UserDashboard() {
-  const { user } = useAuth()
+  const { user, isLoading: authLoading } = useAuth()
   const [rfqs, setRfqs] = useState<RFQ[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!user) return
+    // Once auth is resolved but no user is present, stop showing the spinner —
+    // DashboardLayout will redirect. Prevents the loader from spinning forever.
+    if (!user) {
+      if (!authLoading) setLoading(false)
+      return
+    }
 
     const fetchRFQs = async () => {
       const { data } = await supabase
@@ -53,7 +58,7 @@ export default function UserDashboard() {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [user]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user, authLoading]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const stats = [
     {

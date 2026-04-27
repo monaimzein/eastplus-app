@@ -1,12 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { loginAction } from './actions'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -14,35 +14,24 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const supabase = createClient()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    const result = await loginAction(email, password)
 
-    if (error) {
-      toast.error('خطأ في البريد الإلكتروني أو كلمة المرور')
+    if ('error' in result) {
+      toast.error(result.error)
       setLoading(false)
       return
     }
 
-    // Use user from signIn response directly - no extra getUser() call needed
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', data.user.id)
-      .single()
-
     toast.success('تم تسجيل الدخول بنجاح')
-    const role = profile?.role
-    if (role === 'admin') window.location.href = '/admin'
-    else if (role === 'staff') window.location.href = '/staff'
-    else window.location.href = '/dashboard'
+    // router.refresh() forces the server to re-read cookies set by the action.
+    // router.replace() navigates without a full page reload, so cookies stay synced.
+    router.refresh()
+    router.replace(result.redirectTo)
   }
 
   return (

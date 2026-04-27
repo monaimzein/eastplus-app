@@ -31,11 +31,25 @@ export function useAuth() {
     // getSession() reads directly from cookie/localStorage storage - reliable in production.
     // INITIAL_SESSION event is NOT used because @supabase/ssr can silently skip it in
     // server-rendered environments (Netlify / Vercel), causing infinite loading.
+    //
+    // Hard 8s safety timeout: if any Supabase call hangs (Edge cold start, websocket
+    // stalled, network blip), we still resolve isLoading so the UI never freezes.
+    const withTimeout = <T,>(p: Promise<T>, ms: number): Promise<T> =>
+      Promise.race([
+        p,
+        new Promise<T>((_, reject) =>
+          setTimeout(() => reject(new Error('timeout')), ms)
+        ),
+      ])
+
     const initSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
+        const { data: { session } } = await withTimeout(
+          supabase.auth.getSession(),
+          8000
+        )
         if (session?.user) {
-          const profile = await fetchProfile(session.user.id)
+          const profile = await withTimeout(fetchProfile(session.user.id), 8000)
           useAuthStore.getState().setUser(profile)
         } else {
           useAuthStore.getState().setUser(null)
