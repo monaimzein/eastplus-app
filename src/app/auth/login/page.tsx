@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
@@ -13,25 +12,19 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
+    // On success the server action calls redirect() and never returns;
+    // execution below only runs on failure. Next.js surfaces the redirect
+    // as a thrown signal that propagates past the await — the browser
+    // follows it automatically with the freshly-set auth cookies.
     const result = await loginAction(email, password)
 
-    if ('error' in result) {
-      toast.error(result.error)
-      setLoading(false)
-      return
-    }
-
-    toast.success('تم تسجيل الدخول بنجاح')
-    // router.refresh() forces the server to re-read cookies set by the action.
-    // router.replace() navigates without a full page reload, so cookies stay synced.
-    router.refresh()
-    router.replace(result.redirectTo)
+    toast.error(result.error)
+    setLoading(false)
   }
 
   return (

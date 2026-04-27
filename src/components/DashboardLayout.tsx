@@ -60,6 +60,15 @@ export default function DashboardLayout({
     fetchNotifications()
   }, [fetchNotifications])
 
+  // Redirect MUST run inside an effect — calling router.replace() during render
+  // throws "Cannot update a component (Router) while rendering DashboardLayout"
+  // which aborts the tree and looks like login silently failing.
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.replace('/auth/login')
+    }
+  }, [isLoading, user, router])
+
   const handleLogout = async () => {
     if (loggingOut) return
     setLoggingOut(true)
@@ -127,8 +136,16 @@ export default function DashboardLayout({
   }
 
   if (!user) {
-    router.replace('/auth/login')
-    return null
+    // Redirect handled by the effect above; render the same loading state
+    // so we don't flash an empty page while the navigation is queued.
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA]">
+        <div className="flex flex-col items-center gap-4">
+          <Image src="/logo.png" alt="EAST PLUS" width={48} height={58} />
+          <div className="w-8 h-8 border-2 border-[#DCBE81] border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    )
   }
 
   const navItems = getNavItems()

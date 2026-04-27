@@ -1,15 +1,18 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 
-export type LoginResult =
-  | { error: string }
-  | { redirectTo: string }
-
+// Returns { error } only on failure. On success the action throws via
+// redirect() — Next.js sends Set-Cookie + Location in a single 303 response,
+// so the browser commits the auth cookies before following the redirect.
+// This eliminates the client-side cookie/navigation race that caused the
+// "stay on /auth/login" bounce on Netlify and locally.
 export async function loginAction(
   email: string,
   password: string
-): Promise<LoginResult> {
+): Promise<{ error: string }> {
   const supabase = await createClient()
 
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -31,5 +34,7 @@ export async function loginAction(
   const redirectTo =
     role === 'admin' ? '/admin' : role === 'staff' ? '/staff' : '/dashboard'
 
-  return { redirectTo }
+  // Drop any cached RSC payloads that were rendered for the anonymous user.
+  revalidatePath('/', 'layout')
+  redirect(redirectTo)
 }
