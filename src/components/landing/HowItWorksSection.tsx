@@ -1,85 +1,50 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Upload, FileSearch, FileCheck } from 'lucide-react'
+import { UserPlus, Upload, FileCheck2, Truck } from 'lucide-react'
+import { useI18n } from '@/lib/i18n/I18nProvider'
+import SectionHeader from './SectionHeader'
 
-const steps = [
-  {
-    icon: Upload,
-    number: '01',
-    title: 'ارفع طلبك',
-    description: 'سجّل حسابك وارفع تفاصيل المواد المطلوبة مع الصور والمواصفات.',
-  },
-  {
-    icon: FileSearch,
-    number: '02',
-    title: 'نراجع ونجهز العرض',
-    description: 'فريقنا يراجع طلبك ويتواصل مع شبكة الموردين لتجهيز أفضل عرض.',
-  },
-  {
-    icon: FileCheck,
-    number: '03',
-    title: 'تستلم عرض السعر خلال 24 ساعة',
-    description: 'تحصل على عرض سعر تفصيلي شامل التوريد والتوصيل.',
-  },
-]
+const ICONS = [UserPlus, Upload, FileCheck2, Truck]
 
 export default function HowItWorksSection() {
+  const { t } = useI18n()
+
   return (
-    <section id="how-it-works" className="py-24 bg-[#1A1A1A] relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-[#DCBE81]/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#DCBE81]/5 rounded-full blur-3xl" />
+    <section className="relative section hairline-top hairline-bottom">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <SectionHeader num="03" title={t.howItWorks.title} subtitle={t.howItWorks.subtitle} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="text-[#DCBE81] text-sm font-semibold">كيف نعمل</span>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mt-3">
-            ثلاث خطوات <span className="gold-text">بسيطة</span>
-          </h2>
-          <p className="text-gray-400 mt-4 max-w-lg mx-auto">
-            عملية سهلة وسريعة للحصول على عرض سعر لجميع احتياجاتك
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {steps.map((step, index) => (
-            <motion.div
-              key={step.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2 }}
-              className="relative"
-            >
-              {/* Connector line */}
-              {index < steps.length - 1 && (
-                <div className="hidden md:block absolute top-16 -left-4 w-8 h-0.5 bg-[#DCBE81]/30" />
-              )}
-
-              <div className="p-8 rounded-2xl bg-white/5 border border-[#DCBE81]/10 backdrop-blur-sm hover:border-[#DCBE81]/30 transition-all duration-300">
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="w-14 h-14 rounded-xl gold-gradient flex items-center justify-center shrink-0">
-                    <step.icon size={24} className="text-white" />
-                  </div>
-                  <span className="text-5xl font-bold text-[#DCBE81]/10">
-                    {step.number}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--border)] rounded-xl overflow-hidden border border-[var(--border)]">
+          {t.howItWorks.steps.map((step, i) => {
+            const Icon = ICONS[i]
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ delay: i * 0.08, duration: 0.5, ease: [0.2, 0.8, 0.2, 1] }}
+                className="relative bg-[var(--surface)] hover:bg-[var(--surface-2)] transition-colors p-7 lg:p-8"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-[0.7rem] font-medium tabular-nums text-[var(--gold)] tracking-widest">
+                    STEP {String(i + 1).padStart(2, '0')}
                   </span>
+                  <Icon size={18} strokeWidth={1.6} className="text-[var(--fg-subtle)]" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">
-                  {step.title}
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  {step.description}
+
+                <h3 className="mt-8 text-base font-semibold text-[var(--fg)]">{step.title}</h3>
+                <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
+                  {step.desc}
                 </p>
-              </div>
-            </motion.div>
-          ))}
+
+                {i < ICONS.length - 1 && (
+                  <span className="hidden lg:block absolute end-0 top-1/2 -translate-y-1/2 w-3 h-px bg-[var(--gold)]" />
+                )}
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </section>

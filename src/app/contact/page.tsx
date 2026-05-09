@@ -1,230 +1,162 @@
 'use client'
 
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import WhatsAppButton from '@/components/WhatsAppButton'
+import { motion } from 'framer-motion'
+import { Mail, Phone, MapPin, Send, MessageCircle } from 'lucide-react'
+import SiteShell from '@/components/SiteShell'
+import PageHero from '@/components/PageHero'
+import { useI18n } from '@/lib/i18n/I18nProvider'
+import { SITE } from '@/lib/siteConfig'
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { Phone, Mail, MapPin, Send, MessageSquare, Clock } from 'lucide-react'
-import toast from 'react-hot-toast'
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
-  })
-  const [sending, setSending] = useState(false)
-  const supabase = createClient()
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setSending(true)
-    
-    const { error } = await supabase.from('contact_messages').insert({
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone || null,
-      subject: formData.subject,
-      message: formData.message,
-    })
-
-    if (error) {
-      // Fallback: table might not exist yet
-      console.error('Contact form error:', error)
-    }
-
-    toast.success('تم إرسال رسالتك بنجاح! سنتواصل معك قريباً')
-    setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
-    setSending(false)
-  }
-
-  const contactInfo = [
-    {
-      icon: Phone,
-      title: 'واتساب',
-      value: '+966 59 404 4446',
-      description: 'من السبت إلى الخميس، 8 ص - 6 م',
-      href: 'https://wa.me/966594044446',
-    },
-    {
-      icon: Mail,
-      title: 'البريد الإلكتروني',
-      value: 'info@eastplus.sa',
-      description: 'نرد خلال 24 ساعة',
-      href: 'mailto:info@eastplus.sa',
-    },
-    {
-      icon: MapPin,
-      title: 'الموقع',
-      value: 'الرياض',
-      description: 'المملكة العربية السعودية',
-      href: 'https://maps.app.goo.gl/VVJrqxWJcdHyL5Vj8',
-    },
-    {
-      icon: Clock,
-      title: 'ساعات العمل',
-      value: 'السبت - الخميس',
-      description: '8:00 صباحاً - 6:00 مساءً',
-      href: null,
-    },
-  ]
+  const { t, locale, dir } = useI18n()
+  const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   return (
-    <>
-      <Navbar />
-      <main className="min-h-screen">
-        {/* Hero */}
-        <section className="relative pt-32 pb-20 bg-[#1A1A1A] overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#DCBE81]/5 to-transparent" />
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div className="text-center max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#DCBE81]/10 border border-[#DCBE81]/20 text-[#DCBE81] text-sm mb-8">
-                <MessageSquare size={14} />
-                نسعد بتواصلك
-              </div>
-              <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">
-                تواصل
-                <span className="block gold-text mt-2">معنا</span>
-              </h1>
-              <p className="text-lg text-gray-400 leading-relaxed">
-                فريقنا جاهز للإجابة على استفساراتك ومساعدتك في كل ما تحتاجه
-              </p>
-            </div>
-          </div>
-        </section>
+    <SiteShell>
+      <PageHero eyebrow={t.contact.title} title={t.contact.title} subtitle={t.contact.subtitle} />
 
-        {/* Contact Info Cards */}
-        <section className="relative -mt-10 z-10">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {contactInfo.map((info) => {
-                const Wrapper = info.href ? 'a' : 'div'
-                const linkProps = info.href
-                  ? { href: info.href, target: info.href.startsWith('http') ? '_blank' : undefined, rel: info.href.startsWith('http') ? 'noopener noreferrer' : undefined }
-                  : {}
-                return (
-                  <Wrapper
-                    key={info.title}
-                    {...linkProps as any}
-                    className={`bg-white rounded-2xl border border-gray-100 p-5 text-center shadow-lg shadow-black/5 hover:border-[#DCBE81]/20 transition-colors ${info.href ? 'cursor-pointer hover:shadow-xl' : ''}`}
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-[#DCBE81]/10 flex items-center justify-center mx-auto mb-3">
-                      <info.icon size={20} className="text-[#DCBE81]" />
-                    </div>
-                    <h3 className="font-semibold text-[#1A1A1A] text-sm">{info.title}</h3>
-                    <p className="text-[#DCBE81] text-sm font-medium mt-1" dir="ltr">{info.value}</p>
-                    <p className="text-xs text-gray-400 mt-1">{info.description}</p>
-                  </Wrapper>
-                )
-              })}
-            </div>
-          </div>
-        </section>
+      <section className="pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-3 gap-8">
+          {/* Info cards */}
+          <div className="space-y-4 lg:col-span-1">
+            {[
+              {
+                Icon: Phone,
+                label: t.common.whatsapp,
+                value: SITE.whatsappDisplay,
+                href: `https://wa.me/${SITE.whatsapp}`,
+              },
+              {
+                Icon: Mail,
+                label: t.common.email,
+                value: SITE.email,
+                href: `mailto:${SITE.email}`,
+              },
+              {
+                Icon: MapPin,
+                label: t.common.address,
+                value: locale === 'ar' ? SITE.address.ar : SITE.address.en,
+                href: SITE.addressMap,
+              },
+            ].map(({ Icon, label, value, href }, i) => (
+              <motion.a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, x: dir === 'rtl' ? 30 : -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="group surface-card p-5 flex items-center gap-4 card-hover"
+              >
+                <div className="w-12 h-12 rounded-xl bg-[var(--gold)]/10 border border-[var(--gold)]/30 flex items-center justify-center text-[var(--gold)] group-hover:bg-[var(--gold)] group-hover:text-[var(--primary-fg)] transition-colors">
+                  <Icon size={20} />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] uppercase tracking-widest text-[var(--fg-subtle)]">{label}</div>
+                  <div className="text-sm font-semibold truncate" dir={label === t.common.whatsapp ? 'ltr' : undefined}>
+                    {value}
+                  </div>
+                </div>
+              </motion.a>
+            ))}
 
-        {/* Contact Form */}
-        <section className="py-24">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-[#1A1A1A]">
-                أرسل لنا <span className="gold-text">رسالة</span>
-              </h2>
-              <p className="text-gray-500 mt-3">
-                أو يمكنك طلب عرض سعر مباشرة من صفحة طلب عرض السعر
-              </p>
-            </div>
-
-            <form
-              onSubmit={handleSubmit}
-              className="bg-white rounded-2xl border border-gray-100 p-8 shadow-lg shadow-black/5 space-y-6"
+            <motion.a
+              href={`https://wa.me/${SITE.whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="block w-full text-center px-5 py-4 rounded-2xl bg-[#25D366] text-white font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <MessageCircle size={18} />
+              {locale === 'ar' ? 'تواصل عبر واتساب' : 'Chat on WhatsApp'}
+            </motion.a>
+          </div>
+
+          {/* Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="surface-card p-6 md:p-8 lg:col-span-2"
+          >
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault()
+                setSubmitted(false)
+                setError('')
+                setLoading(true)
+                const formData = new FormData(e.currentTarget)
+                const response = await fetch('/api/contact', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(Object.fromEntries(formData.entries())),
+                })
+                const body = await response.json().catch(() => ({}))
+                setLoading(false)
+                if (!response.ok) {
+                  setError(body.error || (locale === 'ar' ? 'تعذر إرسال الرسالة.' : 'Could not send the message.'))
+                  return
+                }
+                e.currentTarget.reset()
+                setSubmitted(true)
+              }}
+              className="space-y-5"
+            >
+              <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">الاسم الكامل *</label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#DCBE81] transition-colors"
-                    placeholder="اسمك الكامل"
-                    required
-                  />
+                  <label className="block text-sm font-medium mb-2">{t.contact.formName}</label>
+                  <input required name="name" className="w-full" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني *</label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#DCBE81] transition-colors"
-                    placeholder="example@company.com"
-                    dir="ltr"
-                    required
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">رقم الجوال</label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData((p) => ({ ...p, phone: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#DCBE81] transition-colors"
-                    placeholder="+966 5X XXX XXXX"
-                    dir="ltr"
-                  />
+                  <label className="block text-sm font-medium mb-2">{t.contact.formCompany}</label>
+                  <input name="company" className="w-full" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">الموضوع *</label>
-                  <select
-                    value={formData.subject}
-                    onChange={(e) => setFormData((p) => ({ ...p, subject: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#DCBE81] transition-colors bg-white"
-                    required
-                  >
-                    <option value="">اختر الموضوع</option>
-                    <option value="استفسار عام">استفسار عام</option>
-                    <option value="طلب تسعير">طلب تسعير</option>
-                    <option value="شكوى">شكوى</option>
-                    <option value="اقتراح">اقتراح</option>
-                    <option value="شراكة تجارية">شراكة تجارية</option>
-                  </select>
+                  <label className="block text-sm font-medium mb-2">{t.contact.formEmail}</label>
+                  <input required type="email" name="email" className="w-full" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">{t.contact.formPhone}</label>
+                  <input required type="tel" name="phone" className="w-full" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">الرسالة *</label>
-                <textarea
-                  value={formData.message}
-                  onChange={(e) => setFormData((p) => ({ ...p, message: e.target.value }))}
-                  rows={5}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-[#DCBE81] transition-colors resize-none"
-                  placeholder="اكتب رسالتك هنا..."
-                  required
-                />
+                <label className="block text-sm font-medium mb-2">{t.contact.formMessage}</label>
+                <textarea required name="message" rows={5} className="w-full" />
               </div>
-              <button
-                type="submit"
-                disabled={sending}
-                className="flex items-center justify-center gap-2 w-full py-3.5 gold-gradient text-white font-semibold rounded-xl hover:opacity-90 disabled:opacity-50 transition-opacity"
-              >
-                {sending ? (
-                  'جاري الإرسال...'
-                ) : (
-                  <>
-                    <Send size={16} />
-                    إرسال الرسالة
-                  </>
-                )}
+              <button type="submit" disabled={loading} className="btn-primary w-full md:w-auto disabled:opacity-50">
+                <Send size={16} />
+                {t.contact.formSend}
               </button>
+              {error && <p className="text-sm text-red-400">{error}</p>}
+              {submitted && (
+                <p className="text-sm text-[var(--gold)]">
+                  {locale === 'ar' ? 'تم استلام رسالتك. سنعاود التواصل معك قريباً.' : 'Message received. We will reach out shortly.'}
+                </p>
+              )}
             </form>
+          </motion.div>
+        </div>
+
+        {/* Map */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+          <div className="surface-card overflow-hidden aspect-[16/7]">
+            <iframe
+              title="Map"
+              src={SITE.addressEmbed}
+              className="w-full h-full border-0"
+              loading="lazy"
+            />
           </div>
-        </section>
-      </main>
-      <Footer />
-      <WhatsAppButton />
-    </>
+        </div>
+      </section>
+    </SiteShell>
   )
 }

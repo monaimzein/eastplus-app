@@ -1,71 +1,39 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Building, HardHat, Landmark, Factory } from 'lucide-react'
+import {
+  Briefcase, Building2, Home, Pencil, Wrench, Landmark,
+} from 'lucide-react'
+import { useI18n } from '@/lib/i18n/I18nProvider'
+import SectionHeader from './SectionHeader'
 
-const clients = [
-  {
-    icon: HardHat,
-    title: 'المقاولون',
-    description: 'مقاولو البناء والتشطيب الذين يبحثون عن مورد موثوق وأسعار تنافسية.',
-  },
-  {
-    icon: Building,
-    title: 'المطورون العقاريون',
-    description: 'شركات التطوير العقاري التي تحتاج توريد بكميات كبيرة ومتنوعة.',
-  },
-  {
-    icon: Landmark,
-    title: 'الجهات الحكومية',
-    description: 'المشاريع الحكومية التي تتطلب مواصفات معتمدة وجودة عالية.',
-  },
-  {
-    icon: Factory,
-    title: 'المصانع والمنشآت',
-    description: 'المنشآت الصناعية التي تحتاج مواد كهربائية وسباكة بكميات كبيرة.',
-  },
-]
+const ICONS = [Briefcase, Building2, Home, Pencil, Wrench, Landmark]
 
 export default function TargetClientsSection() {
-  return (
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="text-[#DCBE81] text-sm font-semibold">عملاؤنا</span>
-          <h2 className="text-3xl md:text-5xl font-bold text-[#1A1A1A] mt-3">
-            نخدم <span className="gold-text">جميع القطاعات</span>
-          </h2>
-        </motion.div>
+  const { t } = useI18n()
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {clients.map((client, index) => (
-            <motion.div
-              key={client.title}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group p-8 rounded-2xl bg-[#FAFAFA] border border-gray-100 hover:bg-[#1A1A1A] transition-all duration-500 cursor-default"
-            >
-              <div className="w-14 h-14 rounded-xl bg-[#DCBE81]/10 group-hover:gold-gradient flex items-center justify-center mb-6 transition-all duration-500">
-                <client.icon
-                  size={28}
-                  className="text-[#DCBE81] group-hover:text-white transition-colors duration-500"
-                />
-              </div>
-              <h3 className="text-lg font-bold text-[#1A1A1A] group-hover:text-white mb-3 transition-colors duration-500">
-                {client.title}
-              </h3>
-              <p className="text-gray-500 group-hover:text-gray-400 text-sm leading-relaxed transition-colors duration-500">
-                {client.description}
-              </p>
-            </motion.div>
-          ))}
+  return (
+    <section className="relative section">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <SectionHeader num="07" title={t.targetClients.title} subtitle={t.targetClients.subtitle} />
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-[var(--border)] rounded-xl overflow-hidden border border-[var(--border)]">
+          {t.targetClients.items.map((item, i) => {
+            const Icon = ICONS[i % ICONS.length]
+            return (
+              <motion.div
+                key={item}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ delay: i * 0.04, duration: 0.45 }}
+                className="group bg-[var(--surface)] hover:bg-[var(--surface-2)] transition-colors p-6 flex flex-col items-start gap-4"
+              >
+                <Icon size={20} strokeWidth={1.6} className="text-[var(--gold)]" />
+                <div className="text-sm font-medium text-[var(--fg)]">{item}</div>
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </section>

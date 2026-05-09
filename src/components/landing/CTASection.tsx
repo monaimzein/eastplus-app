@@ -1,37 +1,64 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { ArrowLeft, ArrowRight, FileDown } from 'lucide-react'
+import { useI18n } from '@/lib/i18n/I18nProvider'
+import { SITE } from '@/lib/siteConfig'
 
 export default function CTASection() {
+  const { t, dir } = useI18n()
+  const Arrow = dir === 'rtl' ? ArrowLeft : ArrowRight
+
   return (
-    <section className="py-24 bg-[#FAFAFA]">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative section">
+      <div className="max-w-6xl mx-auto px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative rounded-3xl overflow-hidden"
+          transition={{ duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}
+          className="relative overflow-hidden rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)]"
         >
-          {/* Background */}
-          <div className="absolute inset-0 gold-gradient" />
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Cpath%20d%3D%22M0%2020h40v1H0zM20%200v40h1V0z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E')] " />
+          {/* Quiet diagonal accent */}
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-[0.06] pointer-events-none"
+            style={{
+              backgroundImage:
+                'repeating-linear-gradient(45deg, var(--gold) 0 1px, transparent 1px 24px)',
+            }}
+          />
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)]/60 to-transparent" />
 
-          <div className="relative z-10 text-center py-16 px-8">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-              جاهز تبدأ مشروعك؟
-            </h2>
-            <p className="text-white/80 text-lg mb-10 max-w-lg mx-auto">
-              احصل على عرض سعر شامل لجميع المواد التي تحتاجها خلال 24 ساعة فقط
-            </p>
-            <Link
-              href="/rfq/new"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-[#1A1A1A] text-white font-semibold rounded-2xl hover:bg-[#2A2A2A] transition-colors text-lg"
-            >
-              اطلب عرض سعر الآن
-              <ArrowLeft size={20} />
-            </Link>
+          <div className="relative px-8 md:px-14 py-14 md:py-20">
+            <div className="grid md:grid-cols-[1fr_auto] items-end gap-10">
+              <div>
+                <span className="eyebrow">— {t.quoteBanner.title}</span>
+                <h2 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight text-balance">
+                  {t.cta.title}
+                </h2>
+                <p className="mt-4 text-[var(--fg-muted)] max-w-lg">
+                  {t.cta.subtitle}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <Link href="/account/rfqs/new" className="btn-primary">
+                  {t.cta.button}
+                  <Arrow size={15} />
+                </Link>
+                <a
+                  href={SITE.profileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-outline"
+                >
+                  <FileDown size={15} />
+                  {t.common.profile}
+                </a>
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>

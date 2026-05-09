@@ -41,6 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
-
-# Local Netlify folder
-.netlify
+.env*.local

@@ -1,91 +1,90 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
-import { Phone, Mail, MapPin, ArrowLeft, ExternalLink } from 'lucide-react'
+import {
+  Phone, Mail, MapPin, ArrowLeft, ArrowRight, FileDown,
+} from 'lucide-react'
+import { useI18n } from '@/lib/i18n/I18nProvider'
+import { SITE, SERVICES } from '@/lib/siteConfig'
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
+  const { t, locale, dir } = useI18n()
+  const Arrow = dir === 'rtl' ? ArrowLeft : ArrowRight
+  const year = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#1A1A1A] text-white relative overflow-hidden">
-      {/* Decorative gradient orb */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#DCBE81]/5 rounded-full blur-3xl" />
+    <footer className="relative mt-24 bg-[var(--bg-2)] text-[var(--fg)] hairline-top overflow-hidden">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)]/40 to-transparent" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
         {/* Top CTA */}
-        <div className="py-12 border-b border-white/10">
+        <div className="py-12 border-b border-[var(--border)]">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 className="text-2xl font-bold">جاهز لطلب عرض سعر؟</h3>
-              <p className="text-gray-400 mt-1">احصل على أفضل الأسعار خلال 24 ساعة</p>
+            <div className="text-center md:text-start">
+              <h3 className="text-2xl md:text-3xl font-bold">
+                {t.cta.title}
+              </h3>
+              <p className="text-[var(--fg-muted)] mt-2">{t.cta.subtitle}</p>
             </div>
-            <Link
-              href="/rfq/new"
-              className="flex items-center gap-2 px-8 py-3.5 gold-gradient text-white font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-lg shadow-[#DCBE81]/20"
-            >
-              طلب عرض سعر
-              <ArrowLeft size={16} />
-            </Link>
+            <div className="flex flex-wrap gap-3 justify-center">
+              <a
+                href={SITE.profileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline"
+              >
+                <FileDown size={16} />
+                {t.common.profile}
+              </a>
+              <Link href="/account/rfqs/new" className="btn-primary">
+                {t.cta.button}
+                <Arrow size={16} />
+              </Link>
+            </div>
           </div>
         </div>
 
-        {/* Main Footer */}
-        <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        {/* Main grid */}
+        <div className="py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
-          <div className="lg:col-span-1">
+          <div>
             <div className="flex items-center gap-3 mb-5">
-              <Image
-                src="/logo.png"
-                alt="EAST PLUS"
-                width={36}
-                height={44}
-                className="brightness-110"
-              />
-              <span className="text-xl font-bold gold-text tracking-wider">
-                EAST PLUS
-              </span>
+              <Image src="/logo.png" alt="EAST PLUS" width={40} height={48} />
+              <div className="flex flex-col">
+                <span className="text-base font-semibold tracking-[0.18em] text-[var(--fg)]">EAST PLUS</span>
+                <span className="text-[10px] text-[var(--fg-subtle)] tracking-[0.3em] uppercase">
+                  {locale === 'ar' ? t.common.tagline : SITE.tagline.en}
+                </span>
+              </div>
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              منصة متخصصة في توريد مواد البناء والتشطيب. نوفر لك أفضل الأسعار
-              من أكبر الموردين في المملكة العربية السعودية.
+            <p className="text-[var(--fg-muted)] text-sm leading-relaxed">
+              {t.about.story}
             </p>
-            {/* Social icons placeholder */}
-            <div className="flex gap-3">
-              {['X', 'In', 'IG'].map((social) => (
-                <div
-                  key={social}
-                  className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-xs text-gray-400 hover:bg-[#DCBE81]/20 hover:text-[#DCBE81] hover:border-[#DCBE81]/30 transition-all cursor-pointer"
-                >
-                  {social}
-                </div>
-              ))}
-            </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick links */}
           <div>
-            <h4 className="text-[#DCBE81] font-semibold mb-5 flex items-center gap-2">
-              <div className="w-1 h-4 gold-gradient rounded-full" />
-              روابط سريعة
+            <h4 className="text-[var(--fg)] font-semibold mb-5 text-sm tracking-wider uppercase">
+              {locale === 'ar' ? 'روابط سريعة' : 'Quick links'}
             </h4>
-            <ul className="space-y-3">
+            <ul className="space-y-3 text-sm">
               {[
-                { href: '/', label: 'الرئيسية' },
-                { href: '/about', label: 'من نحن' },
-                { href: '/services', label: 'خدماتنا' },
-                { href: '/contact', label: 'تواصل معنا' },
-                { href: '/blog', label: 'المدونة' },
-                { href: '/rfq/new', label: 'طلب عرض سعر' },
-              ].map((link) => (
-                <li key={link.href}>
+                { href: '/', label: t.nav.home },
+                { href: '/about', label: t.nav.about },
+                { href: '/services', label: t.nav.services },
+                { href: '/gallery', label: t.nav.gallery },
+                { href: '/blog', label: t.nav.blog },
+                { href: '/contact', label: t.nav.contact },
+                { href: '/account/rfqs/new', label: t.common.requestQuote },
+              ].map((l) => (
+                <li key={l.href}>
                   <Link
-                    href={link.href}
-                    className="text-gray-400 text-sm hover:text-[#DCBE81] transition-colors flex items-center gap-2 group"
+                    href={l.href}
+                    className="group inline-flex items-center gap-2 text-[var(--fg-muted)] hover:text-[var(--gold)] transition-colors"
                   >
-                    <ArrowLeft
-                      size={12}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity"
-                    />
-                    {link.label}
+                    <Arrow size={12} className="opacity-0 -ms-1 group-hover:opacity-100 group-hover:ms-0 transition-all" />
+                    {l.label}
                   </Link>
                 </li>
               ))}
@@ -94,24 +93,19 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="text-[#DCBE81] font-semibold mb-5 flex items-center gap-2">
-              <div className="w-1 h-4 gold-gradient rounded-full" />
-              خدماتنا
+            <h4 className="text-[var(--fg)] font-semibold mb-5 text-sm tracking-wider uppercase">
+              {t.nav.services}
             </h4>
-            <ul className="space-y-3">
-              {[
-                'توريد مواد السباكة',
-                'توريد مواد الكهرباء',
-                'مواد البناء والتشييد',
-                'الأدوات الصحية',
-                'مواد العزل',
-                'أدوات التشطيب',
-              ].map((service) => (
-                <li key={service}>
-                  <span className="text-gray-400 text-sm flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#DCBE81]/50" />
-                    {service}
-                  </span>
+            <ul className="space-y-3 text-sm">
+              {SERVICES.map((s) => (
+                <li key={s.key}>
+                  <Link
+                    href={s.href}
+                    className="group inline-flex items-center gap-2 text-[var(--fg-muted)] hover:text-[var(--gold)] transition-colors"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]/40 group-hover:bg-[var(--gold)]" />
+                    {t.services.items[s.key].title}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -119,55 +113,60 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-[#DCBE81] font-semibold mb-5 flex items-center gap-2">
-              <div className="w-1 h-4 gold-gradient rounded-full" />
-              تواصل معنا
+            <h4 className="text-[var(--fg)] font-semibold mb-5 text-sm tracking-wider uppercase">
+              {t.common.contactUs}
             </h4>
-            <ul className="space-y-4">
+            <ul className="space-y-4 text-sm">
               <li>
                 <a
-                  href="https://wa.me/966594044446"
+                  href={`https://wa.me/${SITE.whatsapp}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-3 text-gray-400 text-sm hover:text-[#DCBE81] transition-colors group"
+                  className="flex items-start gap-3 text-[var(--fg-muted)] hover:text-[var(--gold)] transition-colors group"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:border-[#DCBE81]/30 transition-colors">
-                    <Phone size={14} className="text-[#DCBE81]" />
-                  </div>
-                  <div>
-                    <span className="block text-xs text-gray-500 mb-0.5">واتساب</span>
-                    <span dir="ltr">+966 59 404 4446</span>
-                  </div>
+                  <span className="w-9 h-9 rounded-lg bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center shrink-0 text-[var(--gold)] group-hover:border-[var(--gold)]/50 transition-colors">
+                    <Phone size={14} />
+                  </span>
+                  <span>
+                    <span className="block text-[10px] uppercase tracking-widest text-[var(--fg-subtle)] mb-0.5">
+                      {t.common.whatsapp}
+                    </span>
+                    <span dir="ltr">{SITE.whatsappDisplay}</span>
+                  </span>
                 </a>
               </li>
               <li>
                 <a
-                  href="mailto:info@eastplus.sa"
-                  className="flex items-start gap-3 text-gray-400 text-sm hover:text-[#DCBE81] transition-colors group"
+                  href={`mailto:${SITE.email}`}
+                  className="flex items-start gap-3 text-[var(--fg-muted)] hover:text-[var(--gold)] transition-colors group"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:border-[#DCBE81]/30 transition-colors">
-                    <Mail size={14} className="text-[#DCBE81]" />
-                  </div>
-                  <div>
-                    <span className="block text-xs text-gray-500 mb-0.5">البريد الإلكتروني</span>
-                    info@eastplus.sa
-                  </div>
+                  <span className="w-9 h-9 rounded-lg bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center shrink-0 text-[var(--gold)] group-hover:border-[var(--gold)]/50 transition-colors">
+                    <Mail size={14} />
+                  </span>
+                  <span>
+                    <span className="block text-[10px] uppercase tracking-widest text-[var(--fg-subtle)] mb-0.5">
+                      {t.common.email}
+                    </span>
+                    {SITE.email}
+                  </span>
                 </a>
               </li>
               <li>
                 <a
-                  href="https://maps.app.goo.gl/VVJrqxWJcdHyL5Vj8"
+                  href={SITE.addressMap}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-start gap-3 text-gray-400 text-sm hover:text-[#DCBE81] transition-colors group"
+                  className="flex items-start gap-3 text-[var(--fg-muted)] hover:text-[var(--gold)] transition-colors group"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:border-[#DCBE81]/30 transition-colors">
-                    <MapPin size={14} className="text-[#DCBE81]" />
-                  </div>
-                  <div>
-                    <span className="block text-xs text-gray-500 mb-0.5">الموقع</span>
-                    الرياض، المملكة العربية السعودية
-                  </div>
+                  <span className="w-9 h-9 rounded-lg bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center shrink-0 text-[var(--gold)] group-hover:border-[var(--gold)]/50 transition-colors">
+                    <MapPin size={14} />
+                  </span>
+                  <span>
+                    <span className="block text-[10px] uppercase tracking-widest text-[var(--fg-subtle)] mb-0.5">
+                      {t.common.address}
+                    </span>
+                    {locale === 'ar' ? SITE.address.ar : SITE.address.en}
+                  </span>
                 </a>
               </li>
             </ul>
@@ -175,16 +174,16 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="py-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-gray-500 text-sm">
-            © {currentYear} EAST PLUS. جميع الحقوق محفوظة.
+        <div className="py-6 border-t border-[var(--border)] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[var(--fg-subtle)] text-sm">
+            © {year} EAST PLUS. {t.common.allRights}.
           </p>
-          <div className="flex gap-6">
-            <Link href="/about" className="text-gray-500 text-xs hover:text-[#DCBE81] transition-colors">
-              سياسة الخصوصية
+          <div className="flex gap-6 text-xs">
+            <Link href="/about" className="text-[var(--fg-subtle)] hover:text-[var(--gold)] transition-colors">
+              {t.common.privacy}
             </Link>
-            <Link href="/about" className="text-gray-500 text-xs hover:text-[#DCBE81] transition-colors">
-              الشروط والأحكام
+            <Link href="/about" className="text-[var(--fg-subtle)] hover:text-[var(--gold)] transition-colors">
+              {t.common.terms}
             </Link>
           </div>
         </div>

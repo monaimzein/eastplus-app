@@ -145,6 +145,13 @@ create table public.blog_posts (
   category text not null,
   seo_title text,
   seo_description text,
+  -- Bilingual (EN). AR fields above are primary; EN falls back to AR if NULL.
+  title_en text,
+  excerpt_en text,
+  content_en text,
+  category_en text,
+  seo_title_en text,
+  seo_description_en text,
   published boolean default false,
   author_id uuid references public.profiles(id) not null,
   created_at timestamptz default now(),
