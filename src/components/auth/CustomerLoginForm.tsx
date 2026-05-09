@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { LogIn } from 'lucide-react'
+import { getAuthErrorMessage } from '@/lib/auth/error-message'
 import { createClient } from '@/lib/supabase/client'
 
 export default function CustomerLoginForm() {
@@ -19,24 +20,31 @@ export default function CustomerLoginForm() {
     event.preventDefault()
     setLoading(true)
     setError('')
-    const supabase = createClient()
-    const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
-    if (signInError || !data.user) {
-      setLoading(false)
-      setError('بيانات الدخول غير صحيحة')
-      return
-    }
 
-    const { data: profile } = await supabase.from('profiles').select('role,is_active').eq('id', data.user.id).maybeSingle()
-    if (!profile || profile.role !== 'user' || profile.is_active === false) {
-      await supabase.auth.signOut()
-      setLoading(false)
-      setError('هذا الدخول مخصص لحسابات العملاء فقط')
-      return
-    }
+    try {
+      const supabase = createClient()
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
 
-    router.replace(next.startsWith('/account') ? next : '/account')
-    router.refresh()
+      if (signInError || !data.user) {
+        setLoading(false)
+        setError(getAuthErrorMessage(signInError))
+        return
+      }
+
+      const { data: profile } = await supabase.from('profiles').select('role,is_active').eq('id', data.user.id).maybeSingle()
+      if (!profile || profile.role !== 'user' || profile.is_active === false) {
+        await supabase.auth.signOut()
+        setLoading(false)
+        setError('هذا الدخول مخصص لحسابات العملاء فقط')
+        return
+      }
+
+      router.replace(next.startsWith('/account') ? next : '/account')
+      router.refresh()
+    } catch {
+      setLoading(false)
+      setError('تعذر الوصول إلى خدمة تسجيل الدخول. تحقق من إعدادات Supabase على الاستضافة.')
+    }
   }
 
   return (

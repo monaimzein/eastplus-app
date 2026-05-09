@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { Shield } from 'lucide-react'
+import { getAuthErrorMessage } from '@/lib/auth/error-message'
 import { createClient } from '@/lib/supabase/client'
 
 export default function ConsoleLoginForm() {
@@ -18,23 +19,32 @@ export default function ConsoleLoginForm() {
     event.preventDefault()
     setLoading(true)
     setError('')
-    const supabase = createClient()
-    const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
-    if (signInError || !data.user) {
+
+    try {
+      const supabase = createClient()
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+
+      if (signInError || !data.user) {
+        setLoading(false)
+        setError(getAuthErrorMessage(signInError))
+        return
+      }
+
+      const { data: profile } = await supabase.from('profiles').select('role,is_active').eq('id', data.user.id).maybeSingle()
+      if (!profile || !['staff', 'admin'].includes(profile.role) || profile.is_active === false) {
+        await supabase.auth.signOut()
+        setLoading(false)
+        setError('هذا الدخول مخصص للموظفين والإدارة فقط')
+        return
+      }
+
+      const fallback = profile.role === 'admin' ? '/console/admin' : '/console/staff'
+      router.replace(next.startsWith('/console') ? next : fallback)
+      router.refresh()
+    } catch {
       setLoading(false)
-      setError('بيانات الدخول غير صحيحة')
-      return
+      setError('تعذر الوصول إلى خدمة تسجيل الدخول. تحقق من إعدادات Supabase على الاستضافة.')
     }
-    const { data: profile } = await supabase.from('profiles').select('role,is_active').eq('id', data.user.id).maybeSingle()
-    if (!profile || !['staff', 'admin'].includes(profile.role) || profile.is_active === false) {
-      await supabase.auth.signOut()
-      setLoading(false)
-      setError('هذا الدخول مخصص للموظفين والإدارة فقط')
-      return
-    }
-    const fallback = profile.role === 'admin' ? '/console/admin' : '/console/staff'
-    router.replace(next.startsWith('/console') ? next : fallback)
-    router.refresh()
   }
 
   return (
