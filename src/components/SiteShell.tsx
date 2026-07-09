@@ -1,6 +1,6 @@
 import Navbar from './Navbar'
 import Footer from './Footer'
-import WhatsAppButton from './WhatsAppButton'
+import SmartAssistant from './SmartAssistant'
 import type { ReactNode } from 'react'
 
 export default function SiteShell({ children }: { children: ReactNode }) {
@@ -9,7 +9,8 @@ export default function SiteShell({ children }: { children: ReactNode }) {
       <Navbar />
       <main className="pt-20 flex-1">{children}</main>
       <Footer />
-      <WhatsAppButton />
+      <SmartAssistant />
     </>
   )
 }
+
