@@ -61,8 +61,8 @@ export const SERVICES: {
     icon: 'HardHat',
     image: '/images/services/construction.jpg',
     features: {
-      ar: ['أسمنت', 'جبس', 'مواد لاصقة', 'سيليكون', 'مواد التشطيب', 'مواد الترميم', 'أدوات المقاولات'],
-      en: ['Cement', 'Gypsum', 'Adhesives', 'Silicone', 'Finishing materials', 'Restoration', 'Contracting tools'],
+      ar: ['شبك لياسة جداري', 'زوايا لياسة معدنية', 'فواصل تمدد', 'شريط فايبر جلاس', 'مسامير ووردات شبك', 'إكسسوارات لياسة متنوعة'],
+      en: ['Plaster mesh', 'Metal corner beads', 'Expansion joints', 'Fiberglass tape', 'Mesh nails & washers', 'Various plaster accessories'],
     },
   },
   {
@@ -127,12 +127,16 @@ export const GALLERY_CATEGORIES = [
   { key: 'construction', folder: 'البناء',  href: '/gallery/construction' },
   { key: 'electrical',   folder: 'الكهرباء', href: '/gallery/electrical' },
   { key: 'plumbing',     folder: 'السباكة',  href: '/gallery/plumbing' },
+  { key: 'sanitary',     folder: 'الأدوات الصحية', href: '/gallery/sanitary' },
+  { key: 'insulation',   folder: 'العزل',      href: '/gallery/insulation' },
+  { key: 'maintenance',  folder: 'الصيانة',    href: '/gallery/maintenance' },
+  { key: 'projects',     folder: 'المشاريع',    href: '/gallery/projects' },
 ] as const
 
 // Stats counters
 export const STATS = [
-  { value: 250, suffix: '+', key: 'projects' },
-  { value: 180, suffix: '+', key: 'clients' },
-  { value: 5000, suffix: '+', key: 'products' },
-  { value: 50, suffix: '+', key: 'suppliers' },
+  { value: 60, suffix: '+', key: 'clients' },
+  { value: 5000, suffix: '+', key: 'brands' },
+  { value: 50000, suffix: '+', key: 'products' },
+  { value: 13, suffix: '+', key: 'regions' },
 ] as const

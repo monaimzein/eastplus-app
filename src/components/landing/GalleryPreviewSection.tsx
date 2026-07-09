@@ -34,7 +34,7 @@ export default function GalleryPreviewSection() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
-          {GALLERY_CATEGORIES.map((cat, i) => (
+          {GALLERY_CATEGORIES.slice(0, 3).map((cat, i) => (
             <motion.div
               key={cat.key}
               initial={{ opacity: 0, y: 12 }}

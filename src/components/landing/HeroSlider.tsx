@@ -57,7 +57,7 @@ export default function HeroSlider() {
       <div ref={emblaRef} className="overflow-hidden h-full">
         <div className="flex h-full">
           {HERO_SLIDES.map((slide, i) => (
-            <div key={slide.image} className="relative h-full min-w-0 flex-[0_0_100%]">
+            <div key={slide.image} className="relative h-full min-w-0 flex-[0_0_100%] overflow-hidden">
               <Image
                 src={slide.image}
                 alt=""

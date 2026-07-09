@@ -28,13 +28,54 @@ export default function AboutPage() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative aspect-[4/3] rounded-3xl overflow-hidden surface-card"
+            className="flex items-center justify-center py-8 lg:py-12"
           >
-            <Image src="/images/about/about-team.jpg" alt="" fill sizes="50vw" className="object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-transparent to-transparent" />
+            <motion.div
+              animate={{
+                y: [0, -10, 0],
+              }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+              className="relative group cursor-pointer select-none"
+            >
+              {/* Soft background glow */}
+              <div className="absolute inset-0 w-full h-full rounded-full bg-[var(--gold)]/10 blur-2xl scale-75 group-hover:scale-110 group-hover:bg-[var(--gold)]/15 transition-all duration-700 opacity-60" />
+              
+              <Image 
+                src="/logo.png" 
+                alt="EAST PLUS" 
+                width={200} 
+                height={240} 
+                priority
+                className="relative z-10 w-auto h-40 md:h-56 object-contain select-none transition-transform duration-500 group-hover:scale-[1.02]"
+              />
+
+              {/* Masked Shimmer Overlay */}
+              <div 
+                className="absolute inset-0 z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-hidden"
+                style={{
+                  maskImage: "url('/logo.png')",
+                  maskSize: "contain",
+                  maskRepeat: "no-repeat",
+                  maskPosition: "center",
+                  WebkitMaskImage: "url('/logo.png')",
+                  WebkitMaskSize: "contain",
+                  WebkitMaskRepeat: "no-repeat",
+                  WebkitMaskPosition: "center",
+                }}
+              >
+                {/* Sliding shimmer light beam */}
+                <div 
+                  className="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-white/55 to-transparent -skew-x-20 -translate-x-full transition-transform duration-1000 ease-out group-hover:translate-x-full"
+                />
+              </div>
+            </motion.div>
           </motion.div>
 
           <motion.div

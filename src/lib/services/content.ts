@@ -154,14 +154,14 @@ const construction: ServiceContent = {
   key: 'construction',
   hero: {
     eyebrow: { ar: 'مواد البناء', en: 'Construction Materials' },
-    title: { ar: 'مواد بناء وتشطيب\nبجودة عالية', en: 'High-quality construction\n& finishing materials' },
-    subtitle: { ar: 'أسمنت، جبس، مواد لاصقة، سيليكون، ومواد ترميم لكل مراحل المشروع من الأساسات إلى التشطيب النهائي.', en: 'Cement, gypsum, adhesives, silicone and restoration materials for every stage from foundation to final finish.' },
+    title: { ar: 'إكسسوارات اللياسة\nبأعلى معايير الجودة', en: 'Premium Plastering\nAccessories' },
+    subtitle: { ar: 'نوفر جميع إكسسوارات اللياسة من شبك لياسة، زوايا معدنية، فواصل تمدد، ومسامير تثبيت لمختلف المشاريع.', en: 'We supply all plastering accessories including plaster mesh, metal corner beads, expansion joints, and fixing nails.' },
     image: '/images/services/construction.jpg',
   },
-  intro: { ar: 'تدعم EAST PLUS مقاوليك ومشاريعك بمواد بناء وتشطيب أصلية تلتزم بالكود السعودي للبناء. أسمنت بمصدر معتمد، ألواح جبس عازلة للحريق، مواد لاصقة عالية القوة، سيليكون مقاوم للعوامل الجوية، ومجموعة كاملة من مواد الترميم والتشطيب الفاخرة.', en: 'EAST PLUS supports your contractors and projects with original construction materials compliant with the Saudi Building Code. Certified-source cement, fire-rated gypsum boards, high-strength adhesives, weather-resistant silicone, and a full range of premium finishing and restoration materials.' },
+  intro: { ar: 'تتميز EAST PLUS بتوريد إكسسوارات اللياسة الأصلية المصنعة وفقاً لأعلى المقاييس الهندسية لتضمن جودة أعمال اللياسة والتشطيب في المشاريع الإنشائية. نوفر شبك اللياسة الجداري، الزوايا المعدنية لحماية الأركان، فواصل التمدد للتحكم بالتشققات، وكل ما يلزم لضمان استواء ومتانة الجدران والأسطح.', en: 'EAST PLUS supplies premium plastering accessories manufactured to the highest engineering standards to ensure durable plastering and finishing. We offer plaster mesh, metal corner beads for corner protection, expansion joints for crack control, and all essential accessories to guarantee wall alignment and durability.' },
   problemSolution: {
-    problems: { ar: ['تأخر توريد الأسمنت والجبس', 'مواد تشطيب رديئة الجودة', 'عدم توفر كميات كبيرة', 'صعوبة الحصول على مواد ترميم'], en: ['Late cement & gypsum delivery', 'Poor-quality finishing materials', 'Bulk quantities unavailable', 'Hard-to-find restoration items'] },
-    solutions: { ar: ['مخزون دائم وتوريد فوري', 'علامات معتمدة فقط', 'تسليم بكميات كبيرة', 'كتالوج كامل من مواد الترميم'], en: ['Always-in-stock with rapid supply', 'Approved brands only', 'Bulk delivery available', 'Full restoration catalogue'] },
+    problems: { ar: ['صدأ زوايا اللياسة الرديئة', 'تشققات اللياسة بسبب عدم استخدام الشبك', 'عدم توفر كميات كافية للمشاريع الكبيرة', 'تأخر التوريد لمواقع المشاريع'], en: ['Rusting of low-quality corner beads', 'Plaster cracking due to missing mesh', 'Insufficient stock for mega projects', 'Delayed delivery to site'] },
+    solutions: { ar: ['زوايا مقاومة للصدأ وعالية الجودة', 'شبك لياسة أصلي متين ومقاوم للشد', 'كميات ضخمة جاهزة للتوريد الفوري', 'شحن وتوريد سريع ومباشر للموقع'], en: ['Rust-resistant, high-grade beads', 'Durable, high-tensile plaster mesh', 'Huge quantities ready for immediate supply', 'Fast & direct site delivery'] },
   },
   process: [
     { title: { ar: 'الطلب', en: 'Request' }, description: { ar: 'أرسل بنود المشروع بالتفصيل.', en: 'Send detailed project items.' } },
@@ -171,18 +171,14 @@ const construction: ServiceContent = {
     { title: { ar: 'المتابعة', en: 'Follow-up' }, description: { ar: 'متابعة استهلاك المشروع وإعادة الطلب.', en: 'Project consumption tracking and re-order.' } },
   ],
   materials: [
-    { name: { ar: 'أسمنت بورتلاندي', en: 'Portland Cement' }, brands: ['Yamama', 'Saudi Cement'] },
-    { name: { ar: 'أسمنت أبيض', en: 'White Cement' } },
-    { name: { ar: 'ألواح جبس بورد', en: 'Gypsum Boards' }, brands: ['Knauf', 'Gyproc'] },
-    { name: { ar: 'مواد لاصقة', en: 'Adhesives' }, brands: ['Sika', 'Mapei'] },
-    { name: { ar: 'سيليكون', en: 'Silicone' }, brands: ['Dow', 'Henkel'] },
-    { name: { ar: 'مواد ترميم', en: 'Restoration Materials' } },
-    { name: { ar: 'مواد عزل', en: 'Insulation Materials' } },
-    { name: { ar: 'دهانات بلاستيك', en: 'Plastic Paints' }, brands: ['Jotun', 'National Paints'] },
-    { name: { ar: 'دهانات زيتية', en: 'Oil Paints' } },
-    { name: { ar: 'بلاط وسيراميك', en: 'Tiles & Ceramics' } },
-    { name: { ar: 'رخام وجرانيت', en: 'Marble & Granite' } },
-    { name: { ar: 'أدوات بناء يدوية', en: 'Hand Tools' } },
+    { name: { ar: 'شبك لياسة جداري معدني', en: 'Metal Wall Plaster Mesh' }, brands: ['Expanded Metal', 'Techno Metal'] },
+    { name: { ar: 'زوايا لياسة معدنية زاوية زاوية زاوية', en: 'Metal Corner Beads' } },
+    { name: { ar: 'فواصل تمدد للـلياسة', en: 'Plaster Expansion Joints' } },
+    { name: { ar: 'مسامير شبك لياسة', en: 'Plaster Mesh Nails' } },
+    { name: { ar: 'وردات تثبيت الشبك', en: 'Mesh Washers' } },
+    { name: { ar: 'شريط فايبر جلاس للتشققات', en: 'Fiberglass Mesh Tape' } },
+    { name: { ar: 'مجرى توقف اللياسة', en: 'Plaster Stop Beads' } },
+    { name: { ar: 'إكسسوارات لياسة إضافية وبدائل', en: 'Additional Plaster Accessories' } },
   ],
   pricingTiers: [
     { name: { ar: 'أساسي', en: 'Basic' }, priceLabel: { ar: 'حسب الكمية', en: 'Volume-based' }, description: { ar: 'مشاريع صغيرة', en: 'Small projects' }, features: { ar: ['علامات محلية', 'تسليم 3-5 أيام', 'فاتورة ضريبية'], en: ['Local brands', '3-5 day delivery', 'Tax invoice'] } },
@@ -200,8 +196,8 @@ const construction: ServiceContent = {
   related: ['insulation', 'projects', 'maintenance'],
   metadata: {
     title: { ar: 'مواد البناء', en: 'Construction Materials' },
-    description: { ar: 'أسمنت، جبس، مواد لاصقة، سيليكون، ومواد ترميم لكل مراحل المشروع. متوافقة مع كود البناء السعودي.', en: 'Cement, gypsum, adhesives, silicone and restoration — every project stage. SBC-compliant.' },
-    keywords: { ar: 'بناء, أسمنت, جبس, سيليكون, تشطيبات, ترميم', en: 'construction, cement, gypsum, silicone, finishing, restoration' },
+    description: { ar: 'إكسسوارات اللياسة من شبك لياسة، زوايا معدنية، فواصل تمدد، ومسامير تثبيت لمشاريع الإنشاء بجودة عالية مطابقة للمعايير.', en: 'High-quality plastering accessories including plaster mesh, corner beads, expansion joints and fixings.' },
+    keywords: { ar: 'لياسة, شبك لياسة, زوايا معدنية, فواصل تمدد, مسامير شبك', en: 'plastering, plaster mesh, corner beads, expansion joints, mesh nails' },
   },
 }
 

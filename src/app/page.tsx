@@ -7,7 +7,6 @@ import WhyUsSection from '@/components/landing/WhyUsSection'
 import HowItWorksSection from '@/components/landing/HowItWorksSection'
 import GalleryPreviewSection from '@/components/landing/GalleryPreviewSection'
 import SuppliersMarquee from '@/components/landing/SuppliersMarquee'
-import ClientsMarquee from '@/components/landing/ClientsMarquee'
 import TargetClientsSection from '@/components/landing/TargetClientsSection'
 import TestimonialsSection from '@/components/landing/TestimonialsSection'
 import ProcessTimelineSection from '@/components/landing/ProcessTimelineSection'
@@ -31,7 +30,6 @@ export default function HomePage() {
       <CertificationsSection />
       <SuppliersMarquee />
       <TargetClientsSection />
-      <ClientsMarquee />
       <FAQSection />
       <QuoteCalculator />
       <CTASection />

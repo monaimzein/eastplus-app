@@ -95,7 +95,7 @@ export const dictionaries = {
         },
         construction: {
           title: 'مواد البناء',
-          desc: 'أسمنت، جبس، مواد لاصقة، سيليكون، مواد ترميم وتشطيب لكل مراحل المشروع.',
+          desc: 'إكسسوارات اللياسة',
         },
         sanitary: {
           title: 'الأدوات الصحية',
@@ -138,10 +138,10 @@ export const dictionaries = {
       ],
     },
     stats: {
-      projects: 'مشاريع منفذة',
       clients: 'عميل سعيد',
+      brands: 'علامة تجارية معتمدة',
       products: 'منتج متوفر',
-      suppliers: 'مورّد معتمد',
+      regions: 'منطقة سعودية مغطاة',
     },
     gallery: {
       title: 'المعرض',
@@ -150,6 +150,10 @@ export const dictionaries = {
         construction: 'مواد البناء',
         electrical: 'الكهرباء',
         plumbing: 'السباكة',
+        sanitary: 'الأدوات الصحية',
+        insulation: 'العزل',
+        maintenance: 'الصيانة',
+        projects: 'المشاريع',
       },
       empty: 'سيتم إضافة الصور قريباً',
     },
@@ -189,10 +193,10 @@ export const dictionaries = {
         'نقدم حلول توريد متكاملة للمشاريع السكنية والتجارية والصناعية. نوفر منتجات عالية الجودة من موردين معتمدين مع ضمان أفضل الأسعار وسرعة التوريد لتلبية احتياجات المقاولين والشركات والمطورين العقاريين.',
       visionTitle: 'رؤيتنا',
       vision:
-        'أن نكون من الشركات الرائدة في مجال توريد مواد البناء والتشطيب في المملكة العربية السعودية.',
+        'أن نصبح شركة عالمية رائدة في توريد كل ما يخص السباكة و الكهرباء و الادوات الصحية و مواد البناء ، تدعم ريادة الأعمال وتعزز الابتكار، وتُمكّن الأفراد والشركات من تحقيق إمكاناتهم الكاملة',
       missionTitle: 'رسالتنا',
       mission:
-        'تقديم منتجات عالية الجودة بأسعار منافسة مع توفير خدمة سريعة وموثوقة تدعم نجاح مشاريع عملائنا.',
+        'نسعى في إيست بلس إلى تحويل التحديات إلى فرص عبر تقديم أدوات وحلول تجارية متطورة. نُكرّس جهودنا لدعم مجتمعات الأعمال ونشر ثقافة التميز والاستدامة، مع الالتزام بتعزيز الشفافية والموثوقية في جميع تعاملاتنا',
       valuesTitle: 'قيمنا',
       values: ['الجودة', 'المصداقية', 'سرعة التنفيذ', 'الالتزام', 'رضا العميل'],
     },
@@ -334,7 +338,7 @@ export const dictionaries = {
         },
         construction: {
           title: 'Construction materials',
-          desc: 'Cement, gypsum, adhesives, silicone, finishing & restoration materials for every stage.',
+          desc: 'Plastering accessories',
         },
         sanitary: {
           title: 'Sanitary ware',
@@ -377,10 +381,10 @@ export const dictionaries = {
       ],
     },
     stats: {
-      projects: 'Projects delivered',
       clients: 'Happy clients',
+      brands: 'Brands supported',
       products: 'Products available',
-      suppliers: 'Approved suppliers',
+      regions: 'Saudi regions',
     },
     gallery: {
       title: 'Gallery',
@@ -389,6 +393,10 @@ export const dictionaries = {
         construction: 'Construction',
         electrical: 'Electrical',
         plumbing: 'Plumbing',
+        sanitary: 'Sanitary Ware',
+        insulation: 'Insulation',
+        maintenance: 'Maintenance',
+        projects: 'Projects',
       },
       empty: 'Photos coming soon',
     },
@@ -428,10 +436,10 @@ export const dictionaries = {
         'We provide integrated supply solutions for residential, commercial and industrial projects. We deliver high-quality products from approved suppliers with the best prices and fast delivery to meet contractors, companies and real estate developers needs.',
       visionTitle: 'Our vision',
       vision:
-        'To be among the leading companies in supplying construction and finishing materials across Saudi Arabia.',
+        'To become a leading global supplier of all things plumbing, electrical, sanitary ware, and building materials, supporting entrepreneurship, fostering innovation, and enabling individuals and businesses to reach their full potential.',
       missionTitle: 'Our mission',
       mission:
-        'Deliver high-quality products at competitive prices with fast and reliable service that supports our clients project success.',
+        'At East Plus, we strive to turn challenges into opportunities by offering advanced trading tools and solutions. We dedicate our efforts to supporting business communities, promoting a culture of excellence and sustainability – committed to transparency and reliability in every dealing.',
       valuesTitle: 'Our values',
       values: ['Quality', 'Integrity', 'Speed', 'Commitment', 'Customer satisfaction'],
     },
